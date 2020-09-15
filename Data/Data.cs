@@ -11,7 +11,7 @@ namespace Trips.Data
                 Name = "Tehran",
                 Description = "Capital City Of Iran",
                 DateStarted = new DateTime(2020,02,05),
-                DateCompleted = null
+                DateCompleted = new DateTime(2021,02,05)
             },
               new Trip(){
                 Id = 2,

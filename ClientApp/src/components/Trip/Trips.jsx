@@ -9,16 +9,25 @@ export class trips extends Component {
         this.state =
         {
             trips: [],
-            loading: false
+            loading: true
         };
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.populateTripsData();
     }
 
-    populateTripsData(){
+    populateTripsData() {
+        axios.get("api/Trip/GetTrips").then(result => {
 
+            console.log(result);
+
+            const reponse = result.data;
+            this.setState({
+                trips: reponse,
+                loading: false
+            });
+        });
     }
 
     renderAllTripsTable = (trips) => {
@@ -32,23 +41,23 @@ export class trips extends Component {
                         <th>Date Completed</th>
                         <th>Action</th>
                     </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>test</td>
-                            <td>test</td>
-                            <td>test</td>
-                            <td>test</td>
-                            <td> - </td>
-                        </tr>
-                        <tr>
-                            <td>test</td>
-                            <td>test</td>
-                            <td>test</td>
-                            <td>test</td>
-                            <td> - </td>
-                        </tr>
-                    </tbody>  
+                </thead>
+                <tbody>
+                    {
+                        trips.map(trip => (
+                            <tr key={trip.id}>
+                                <td>{trip.name}</td>
+                                <td>{trip.description}</td>
+                                <td>{new Date(trip.dateStarted).toLocaleDateString()}
+                                </td>
+                                <td>{trip.dateCompleted ? new Date(trip.dateCompleted).toLocaleDateString(): '-'}
+                                </td>
+                                <td> - </td>
+                            </tr>
+                        ))
+                    }
+
+                </tbody>
             </table>
         )
     }
@@ -62,8 +71,8 @@ export class trips extends Component {
             </p>
 
         ) : (
-            this.renderAllTripsTable(this.state.trips)
-        );
+                this.renderAllTripsTable(this.state.trips)
+            );
 
         return (
             <div>

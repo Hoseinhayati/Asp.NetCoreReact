@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Mvc;
 using Trips.Data;
 
@@ -23,8 +24,18 @@ namespace Trips.Controllers
         [HttpGet("[action]")]
         public IActionResult GetTrips()
         {
-            var allltrips = _tripService.GetAllTrips();
-            return Ok(allltrips);
+            try
+            {
+                //throw new Exception();
+                var allltrips = _tripService.GetAllTrips();
+                return Ok(allltrips);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
+            }
+
         }
 
         [HttpPost("AddTrip")]
@@ -38,9 +49,9 @@ namespace Trips.Controllers
         }
 
         [HttpPut("UpdateTrip/{id}")]
-        public IActionResult UpdateTrip(int id,[FromBody] Trip trip)
+        public IActionResult UpdateTrip(int id, [FromBody] Trip trip)
         {
-            _tripService.UpdateTrip(id,trip);
+            _tripService.UpdateTrip(id, trip);
             return Ok();
         }
 

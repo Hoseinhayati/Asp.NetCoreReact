@@ -8,12 +8,14 @@ export class trips extends Component {
         super(props);
 
         this.onUpdateTrip = this.onUpdateTrip.bind(this);
-        this.onDeleteTrip=this.onDeleteTrip.bind(this);
+        this.onDeleteTrip = this.onDeleteTrip.bind(this);
 
         this.state =
         {
             trips: [],
-            loading: true
+            loading: true,
+            failed: false,
+            errormessage: ""
         };
     }
 
@@ -34,12 +36,18 @@ export class trips extends Component {
     populateTripsData() {
         axios.get("api/Trip/GetTrips").then(result => {
 
-            console.log(result);
 
             const reponse = result.data;
             this.setState({
                 trips: reponse,
                 loading: false
+            });
+        }).catch(error => {
+            this.setState({
+                trips: [],
+                loading: false,
+                failed: true,
+                errormessage: "trips data cannot be loaded"
             });
         });
     }
@@ -95,10 +103,14 @@ export class trips extends Component {
             <p>
                 <em>loading...</em>
             </p>
-
-        ) : (
-                this.renderAllTripsTable(this.state.trips)
-            );
+        ) : this.state.failed ? (
+            <p className="text-danger">
+                <em>{this.state.errormessage}</em>
+            </p>
+        ) :
+                (
+                    this.renderAllTripsTable(this.state.trips)
+                );
 
         return (
             <div>

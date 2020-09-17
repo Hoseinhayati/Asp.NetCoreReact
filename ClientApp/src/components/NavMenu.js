@@ -33,10 +33,10 @@ export class NavMenu extends Component {
               <ul className="navbar-nav flex-grow">
 
                 <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/create">add trips</NavLink>
+                  <NavLink tag={Link} className="text-dark" to="/trips/create">add trips</NavLink>
                 </NavItem>
                 <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/trips">trips</NavLink>
+                  <NavLink tag={Link} className="text-dark" to="/trips/alltrip">trips</NavLink>
                 </NavItem>
               </ul>
             </Collapse>

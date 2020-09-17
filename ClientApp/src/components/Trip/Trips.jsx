@@ -6,6 +6,10 @@ export class trips extends Component {
 
     constructor(props) {
         super(props);
+
+        this.onUpdateTrip = this.onUpdateTrip.bind(this);
+        this.onDeleteTrip=this.onDeleteTrip.bind(this);
+
         this.state =
         {
             trips: [],
@@ -15,6 +19,16 @@ export class trips extends Component {
 
     componentDidMount() {
         this.populateTripsData();
+    }
+
+    onUpdateTrip(id) {
+        const { history } = this.props;
+        history.push("/trips/update/" + id)
+    }
+
+    onDeleteTrip(id) {
+        const { history } = this.props;
+        history.push("/trips/delete/" + id)
     }
 
     populateTripsData() {
@@ -48,11 +62,23 @@ export class trips extends Component {
                             <tr key={trip.id}>
                                 <td>{trip.name}</td>
                                 <td>{trip.description}</td>
-                                <td>{new Date(trip.dateStarted).toLocaleDateString()}
+                                <td>{new Date(trip.dateStarted).toISOString().slice(0, 10)}</td>
+                                <td>
+                                    {trip.dateCompleted
+                                        ? new Date(trip.dateCompleted).toISOString().slice(0, 10)
+                                        : "-"}
                                 </td>
-                                <td>{trip.dateCompleted ? new Date(trip.dateCompleted).toLocaleDateString(): '-'}
+                                <td>
+                                    <div className="form-group">
+                                        <button
+                                            className="btn btn-warning"
+                                            onClick={() => this.onUpdateTrip(trip.id)}>
+                                            Update
+                                        </button>
+                                        <button className="btn btn-danger"
+                                            onClick={() => this.onDeleteTrip(trip.id)}>Delete</button>
+                                    </div>
                                 </td>
-                                <td> - </td>
                             </tr>
                         ))
                     }

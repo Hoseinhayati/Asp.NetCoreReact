@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
 
-export class create extends Component {
+export class update extends Component {
     constructor(props) {
         super(props);
 
@@ -11,6 +11,7 @@ export class create extends Component {
         this.onChangeDateCompleted = this.onChangeDateCompleted.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
 
+        this.updateCancel = this.updateCancel.bind(this);
         this.state = {
             name: '',
             description: '',
@@ -44,20 +45,43 @@ export class create extends Component {
         });
     }
 
+
+    componentDidMount() {
+        const { id } = this.props.match.params;
+        Axios.get("api/Trip/SingleTrip/" + id).then(result => {
+            const response = result.data;
+            this.setState({
+                name: response.name,
+                description: response.description,
+                dateStarted: new Date(response.dateStarted).toISOString().slice(0, 10),
+                dateCompleted: response.dateCompleted
+                  ? new Date(response.dateCompleted).toISOString().slice(0, 10)
+                  : null
+            });
+        });
+    }
+
     onSubmit(e) {
         e.preventDefault();
         const { history } = this.props;
+        const { id } = this.props.match.params;
 
         let tripObject = {
-            Id: Math.floor(Math.random() * 1000),
             name: this.state.name,
             description: this.state.description,
-            dateStarted: this.state.dateStarted,
+            dateStarted: new Date(this.state.dateStarted).toISOString(),
             dateCompleted: this.state.dateCompleted
+              ? new Date(this.state.dateCompleted).toISOString()
+              : null
         }
-        Axios.post("api/Trip/AddTrip", tripObject).then(result => {
+        Axios.put("api/Trip/UpdateTrip/" + id, tripObject).then(result => {
             history.push('/trips/alltrip');
         });
+    }
+
+    updateCancel() {
+        const { history } = this.props;
+        history.push("/trips/alltrip")
     }
 
     render() {
@@ -93,7 +117,8 @@ export class create extends Component {
                     </div>
 
                     <div className="form-group">
-                        <input type="submit" value="Add Trip" className="btn btn-success" />
+                        <button onClick={this.updateCancel} className="btn btn-danger">Cancel</button>
+                        <button type="submit" className="btn btn-success">Upate</button>
                     </div>
                 </form>
             </div>
